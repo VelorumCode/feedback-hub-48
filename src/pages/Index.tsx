@@ -2,7 +2,8 @@ import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import FeedbackForm from "@/components/FeedbackForm";
 import LatestFeedback from "@/components/LatestFeedback";
-import { MessageCircle, Sparkles } from "lucide-react";
+import FeedbackSearch from "@/components/FeedbackSearch";
+import { MessageCircle, Sparkles, Search } from "lucide-react";
 
 interface Feedback {
   id: string;
@@ -15,6 +16,7 @@ interface Feedback {
 const Index = () => {
   const [latestFeedback, setLatestFeedback] = useState<Feedback | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   const fetchLatestFeedback = useCallback(async () => {
     try {
@@ -40,6 +42,7 @@ const Index = () => {
 
   const handleSubmitSuccess = () => {
     fetchLatestFeedback();
+    setRefreshTrigger((prev) => prev + 1);
   };
 
   return (
@@ -59,7 +62,7 @@ const Index = () => {
         </header>
 
         {/* Feedback Form Card */}
-        <section 
+        <section
           className="bg-card rounded-2xl shadow-card border border-border p-6 sm:p-8 mb-6 animate-slide-up"
           aria-labelledby="form-heading"
         >
@@ -73,8 +76,8 @@ const Index = () => {
         </section>
 
         {/* Latest Feedback Card */}
-        <section 
-          className="bg-card rounded-2xl shadow-card border border-border p-6 sm:p-8 animate-slide-up"
+        <section
+          className="bg-card rounded-2xl shadow-card border border-border p-6 sm:p-8 mb-6 animate-slide-up"
           style={{ animationDelay: "0.1s" }}
           aria-labelledby="latest-heading"
         >
@@ -82,6 +85,21 @@ const Index = () => {
             Latest Feedback
           </h2>
           <LatestFeedback feedback={latestFeedback} isLoading={isLoading} />
+        </section>
+
+        {/* Search All Feedbacks Card */}
+        <section
+          className="bg-card rounded-2xl shadow-card border border-border p-6 sm:p-8 animate-slide-up"
+          style={{ animationDelay: "0.2s" }}
+          aria-labelledby="search-heading"
+        >
+          <div className="flex items-center gap-2 mb-5">
+            <Search className="w-5 h-5 text-primary" />
+            <h2 id="search-heading" className="font-semibold text-foreground">
+              Search All Feedback
+            </h2>
+          </div>
+          <FeedbackSearch refreshTrigger={refreshTrigger} />
         </section>
 
         {/* Footer */}
