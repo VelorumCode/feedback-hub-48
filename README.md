@@ -22,4 +22,3 @@ Feedback Hub allows users to:
 - Demonstrate proper GitHub collaboration workflows  
 
 ---
-
